@@ -10,6 +10,6 @@ class LikedItem(models.Model):
 
     # now we will define generic type of the object 
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-    content_id = models.PositiveIntegerField()
+    object_id = models.PositiveIntegerField()
     # Qury field for whoel object
     content_object= GenericForeignKey()

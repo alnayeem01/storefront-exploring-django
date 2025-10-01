@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'playground', #registerig the new app i created
     "debug_toolbar",
     "store",
-    "tags"
+    "tags",
+    "likes"
 ]
 
 MIDDLEWARE = [

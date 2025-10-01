@@ -31,6 +31,25 @@ class Customer(models.Model):
     birth_date = models.DateField(null = True) # mensa the field can be null
     membership = models.CharField(max_length=1, choices=MEMBERSHIP_CHOICES, default=MEMBERSHIP_BRONZE) #here we passed the options and also the default value 
 
+    # This is an inner Meta class inside a Django model. It lets you add extra settings about how the model behaves with the database.
+    class Meta:
+        """
+        - `Meta` lets you customize model behavior.
+        - `db_table`: rename the actual SQL table (default would be app_model).
+        - `indexes`: create DB indexes for faster queries.
+        Example: searching customers by first_name + last_name will be quick.
+
+        By default, Django would name the table <appname>_<modelname> → e.g. store_customer.
+        With db_table, you override that default.
+        Here, you’re telling Django:
+        👉 “Instead of store_customer, create/use a table called store_customers.
+
+        """
+        db_table ='store_customers'
+        indexes = [
+            models.Index(fields=['first_name', 'last_name'])
+        ]
+
 class Order(models.Model):
     PAYMENT_PENDING = 'P'
     PAYMENT_COMPLETE = 'C'
@@ -53,6 +72,7 @@ class Address (models.Model):
     # - on_delete=CASCADE: delete address if customer is deleted
     # - primary_key=True: use customer_id as primary key (no separate id)
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    zip = models.CharField(max_length=255)
 
 class Promotion(models.Model):
     title = models.CharField(max_length=255)
@@ -66,8 +86,9 @@ class Collection(models.Model):
 
 class Product(models.Model):
     title = models.CharField(max_length=255)
+    slug = models.SlugField()
     description = models.TextField()
-    price = models.DecimalField(max_digits=6, decimal_places=2)
+    unit_price = models.DecimalField(max_digits=6, decimal_places=2)
     inventory  = models.IntegerField()
     last_update = models.DateTimeField(auto_now=True)
     # one Collection : many Product

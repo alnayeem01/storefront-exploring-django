@@ -18,7 +18,7 @@ class TaggedItem(models.Model):
     # Type : item type 
     # Id : item id
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-    content_id = models.PositiveIntegerField()
+    object_id = models.PositiveIntegerField()
     # usign this field we can actually query the object added in the tag
-    content_Object = GenericForeignKey()
+    content_object = GenericForeignKey()
 

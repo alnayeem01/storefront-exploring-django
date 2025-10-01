@@ -31,6 +31,25 @@ class Customer(models.Model):
     birth_date = models.DateField(null = True) # mensa the field can be null
     membership = models.CharField(max_length=1, choices=MEMBERSHIP_CHOICES, default=MEMBERSHIP_BRONZE) #here we passed the options and also the default value 
 
+    # This is an inner Meta class inside a Django model. It lets you add extra settings about how the model behaves with the database.
+    class Meta:
+        """
+        - `Meta` lets you customize model behavior.
+        - `db_table`: rename the actual SQL table (default would be app_model).
+        - `indexes`: create DB indexes for faster queries.
+        Example: searching customers by first_name + last_name will be quick.
+
+        By default, Django would name the table <appname>_<modelname> → e.g. store_customer.
+        With db_table, you override that default.
+        Here, you’re telling Django:
+        👉 “Instead of store_customer, create/use a table called store_customers.
+
+        """
+        db_table ='store_customers'
+        indexes = [
+            models.Index(fields=['first_name', 'last_name'])
+        ]
+
 class Order(models.Model):
     PAYMENT_PENDING = 'P'
     PAYMENT_COMPLETE = 'C'

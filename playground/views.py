@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from store.models import Product
+from store.models import Order
 from django.http import HttpResponse
 from django.db.models import Q,F
 
@@ -43,12 +44,21 @@ def say_hello(request):
     # # The deferred fields are fetched **only when accessed later**
 
     # Fetch all products and their related collection in a single SQL query
-    query_set = Product.objects.select_related('collection').all()
+    # query_set = Product.objects.select_related('collection').all()
     # ✅ select_related() is used for one-to-one or many-to-one relationships (like ForeignKey)
     # ✅ It performs an SQL JOIN to get related 'collection' data immediately
     #used in one-to-one relationship
 
+    # query_set = Product.objects.prefetch_related('promotions').all()
     
+    #aggregating objects
+    query_set = (
+        Order
+        .objects
+        .select_related('customer')
+        .prefetch_related('orderitem_set__product')
+        .order_by('-placed_at')[:5]
+        )
 
 
 

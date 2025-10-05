@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from store.models import Product
 from store.models import Order
+from store.models import Customer
 from django.http import HttpResponse
 from django.db.models import Q,F
 
@@ -52,13 +53,21 @@ def say_hello(request):
     # query_set = Product.objects.prefetch_related('promotions').all()
     
     #aggregating objects
+    # query_set = (
+    #     Order
+    #     .objects
+    #     .select_related('customer')
+    #     .prefetch_related('orderitem_set__product')
+    #     .order_by('-placed_at')[:5]
+    #     )
+    
+    #annotating objects
     query_set = (
-        Order
-        .objects
-        .select_related('customer')
-        .prefetch_related('orderitem_set__product')
-        .order_by('-placed_at')[:5]
+       Customer.objects.annotate(new_id=F('id'))
         )
+    # annotate() → adds calculated/aggregate fields per object
+    # Common functions: Count, Sum, Avg, Max, Min
+    # Example: Customer.objects.annotate(order_count=Count('order'))
 
 
 
